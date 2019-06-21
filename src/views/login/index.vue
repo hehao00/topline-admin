@@ -1,0 +1,22 @@
+<template>
+  <div>
+    <p>login</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'AppLogin',
+
+  data () {
+    return {
+    }
+  },
+
+  methods: {}
+}
+</script>
+
+<style  lang="less" scoped>
+
+</style>
