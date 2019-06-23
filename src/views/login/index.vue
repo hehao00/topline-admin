@@ -38,12 +38,12 @@ export default {
 
   data () {
     return {
-      userform: {
+      userform: { // 表单数据对象
         mobile: '',
         code: '',
         agree: ''
       },
-      rules: {
+      rules: { // 验证规则对象
         mobile: [
           { required: true, message: '请输入手机号码', trigger: 'blur' },
           { pattern: /\d{11}/, message: '请输入有效的手机号码', trigger: 'blur' }
@@ -90,6 +90,7 @@ export default {
       })
     },
     handleSendCode () {
+      // 验证手机号是否有效
       this.$refs['form'].validateField('mobile', errorMessage => {
         if (errorMessage.trim().length > 0) {
           return
@@ -140,6 +141,7 @@ export default {
         )
       })
     },
+    // 发送验证码倒计时
     codeCountDown () {
       this.codeTimer = window.setInterval(() => {
         this.codeTimerSeconds--
@@ -180,6 +182,7 @@ export default {
             .agree-checkbox{
               a{
                 text-decoration: none;
+               color:rgb(64,158,255)
               }
             }
         }
