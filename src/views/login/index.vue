@@ -32,7 +32,7 @@
 import axios from 'axios'
 // 引入极验
 import '@/vendor/gt'
-const initCodeTimeSeconds = 10
+const initCodeTimeSeconds = 60
 export default {
   name: 'AppLogin',
 
@@ -78,6 +78,8 @@ export default {
         url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
         data: this.userform
       }).then(res => {
+        const userInfo = res.data.data
+        window.localStorage.setItem('user_info', JSON.stringify(userInfo))
         this.$message({
           message: '登录成功',
           type: 'success'
