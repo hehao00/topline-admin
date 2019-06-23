@@ -1,10 +1,10 @@
 <template>
     <el-row>
-      <el-col :span="22"><div class="js">江苏传智播客教育科技股份有限公司</div></el-col>
-       <el-col :span="2">
+      <el-col :span="17"><div class="js">江苏传智播客教育科技股份有限公司</div></el-col>
+       <el-col :span="3" :offset="4">
+           <img :src="userInfo.photo">
            <el-dropdown trigger="click">
-               <img :src="userInfo.photo">
-            <span class="el-dropdown-link">
+              <span class="el-dropdown-link">
                 {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
@@ -33,14 +33,13 @@ export default {
 
 <style scoped lang='less'>
     img{
-        width: 35px;
-        height:35px;
+        width: 30px;
+        height:30px;
         border-radius: 50%;
         vertical-align: middle;
-        // padding-left:5px;
     }
     .el-col{
         line-height: 60px;
         padding-left:5px;
     }
-</style>
+   </style>
