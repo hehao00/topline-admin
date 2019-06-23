@@ -14,12 +14,11 @@
             <el-input v-model="userform.code" placeholder="验证码"></el-input>
           </el-col>
           <el-col :offset="1" :span="8" class="input-t">
-            <el-button @click="handleSendCode">获取验证码</el-button>
+            <el-button @click=" handleSendCode" :disabled="!!codeTimer">{{ codeTimer ? `剩余${codeTimerSeconds}秒` : '获取验证码' }}</el-button>
           </el-col>
         </el-form-item>
         <el-form-item prop="agree">
-          <el-checkbox class="agree-checkbox" v-model="userform.agree"></el-checkbox>
-          <span class="agree-text">我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私条款</a></span>
+          <el-checkbox class="agree-checkbox" v-model="userform.agree">我已阅读并同意<a href="#">用户协议</a>和<a href="#">隐私条款</a></el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-button class="btn-login" type="primary" @click="handleLogin">登录</el-button>
@@ -33,6 +32,7 @@
 import axios from 'axios'
 // 引入极验
 import '@/vendor/gt'
+const initCodeTimeSeconds = 10
 export default {
   name: 'AppLogin',
 
@@ -56,7 +56,9 @@ export default {
           { required: true, message: '请同意用户协议' },
           { pattern: /true/, message: '请同意用户协议' }
         ]
-      }
+      },
+      codeTimer: null, // 倒计时定时器
+      codeTimerSeconds: initCodeTimeSeconds // 倒计时事件
     }
   },
 
@@ -110,12 +112,11 @@ export default {
           offline: !data.success,
           new_captcha: data.new_captcha,
           product: 'bind'
-        }, function (captchaObj) {
-          // captchaObj.appendTo('#captchaBox') // 将验证按钮插入到宿主页面中captchaBox元素内
-          captchaObj.onReady(function () {
+        }, captchaObj => {
+          captchaObj.onReady(() => {
             captchaObj.verify() // 弹出验证内容框
             // your code
-          }).onSuccess(function () {
+          }).onSuccess(() => {
             const {
               geetest_challenge: challenge,
               geetest_seccode: seccode,
@@ -129,7 +130,8 @@ export default {
                 seccode
               }
             }).then(res => {
-              console.log(res.data)
+              // console.log(res.data)
+              this.codeCountDown()
             })
           }).onError(function () {
             // your code
@@ -137,6 +139,19 @@ export default {
         }
         )
       })
+    },
+    codeCountDown () {
+      this.codeTimer = window.setInterval(() => {
+        this.codeTimerSeconds--
+        if (this.codeTimerSeconds <= 0) {
+          // 清除定时器
+          window.clearInterval(this.codeTimer)
+          // 倒计时回到初始状态
+          this.codeTimerSeconds = initCodeTimeSeconds
+          // 将存储定时器的变量重新赋值为null
+          this.codeTimer = null
+        }
+      }, 1000)
     }
   }
 }
@@ -162,7 +177,7 @@ export default {
             .btn-login{
                 width:100%;
             }
-            .agree-text{
+            .agree-checkbox{
               a{
                 text-decoration: none;
               }
