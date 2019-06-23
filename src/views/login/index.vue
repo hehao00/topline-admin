@@ -88,6 +88,15 @@ export default {
       })
     },
     handleSendCode () {
+      this.$refs['form'].validateField('mobile', errorMessage => {
+        if (errorMessage.trim().length > 0) {
+          return
+        }
+        // 验证通过，初始化显示验证码
+        this.showGeetest()
+      })
+    },
+    showGeetest () {
       const { mobile } = this.userform
       axios({
         methods: 'GET',
