@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import { removeUser, getUser } from '@/utils/auth'
 export default {
   name: 'AppHeader',
 
@@ -27,7 +28,8 @@ export default {
     }
   },
   created () {
-    this.userInfo = JSON.parse(window.localStorage.getItem('user_info'))
+    // this.userInfo = JSON.parse(window.localStorage.getItem('user_info'))
+    this.userInfo = getUser()
   },
   methods: {
     handleLogout () {
@@ -38,7 +40,8 @@ export default {
         center: true
       }).then(() => {
         // 清空本地存储中的 user_info
-        window.localStorage.removeItem('user_info')
+        // window.localStorage.removeItem('user_info')
+        removeUser()
         // 跳转到登陆页面
         this.$router.push({ name: 'login' })
         this.$message({

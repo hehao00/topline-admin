@@ -32,6 +32,7 @@
 import axios from 'axios'
 // 引入极验
 import '@/vendor/gt'
+import { saveUser } from '@/utils/auth' // 按需加载 加载模块中非 export default 成员
 const initCodeTimeSeconds = 60
 export default {
   name: 'AppLogin',
@@ -79,7 +80,8 @@ export default {
         data: this.userform
       }).then(res => {
         const userInfo = res.data.data
-        window.localStorage.setItem('user_info', JSON.stringify(userInfo))
+        // window.localStorage.setItem('user_info', JSON.stringify(userInfo))
+        saveUser(userInfo)
         this.$message({
           message: '登录成功',
           type: 'success'

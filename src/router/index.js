@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import nprogress from 'nprogress'
+import { getUser } from '@/utils/auth'
 Vue.use(Router)
 
 const router = new Router({
@@ -41,7 +42,8 @@ const router = new Router({
 // next 允许通过的方法
 router.beforeEach((to, from, next) => {
   nprogress.start()
-  const userInfo = window.localStorage.getItem('user_info')
+  // const userInfo = window.localStorage.getItem('user_info')
+  const userInfo = getUser()
   if (to.path !== '/login') {
     // 非登陆页面
     // 没有登陆，跳转到登陆页

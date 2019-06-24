@@ -21,10 +21,10 @@
           <span>内容管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/publish">发布文章</el-menu-item>
-          <el-menu-item index="1-2">内容列表</el-menu-item>
-          <el-menu-item index="1-3">评论列表</el-menu-item>
-          <el-menu-item index="1-4">素材管理</el-menu-item>
+          <el-menu-item index="/publish"><i class="iconfont icon-xinwen"></i>发布文章</el-menu-item>
+          <el-menu-item index="1-2"><i class="iconfont icon-neirongliebiao"></i>内容列表</el-menu-item>
+          <el-menu-item index="1-3"><i class="iconfont icon-wenbenshuru"></i>评论列表</el-menu-item>
+          <el-menu-item index="1-4"><i class="iconfont icon-sucai"></i>素材管理</el-menu-item>
         </el-menu-item-group>
         </el-submenu>
         <el-submenu index="2">
@@ -33,10 +33,10 @@
           <span>粉丝管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="2-1">图文数据</el-menu-item>
-          <el-menu-item index="2-2">粉丝概况</el-menu-item>
-          <el-menu-item index="2-3">粉丝画像</el-menu-item>
-          <el-menu-item index="2-4">粉丝列表</el-menu-item>
+          <el-menu-item index="2-1"><i class="iconfont icon-tuwen"></i>图文数据</el-menu-item>
+          <el-menu-item index="2-2"><i class="iconfont icon-7-copy"></i>粉丝概况</el-menu-item>
+          <el-menu-item index="2-3"><i class="iconfont icon-fensi"></i>粉丝画像</el-menu-item>
+          <el-menu-item index="2-4"><i class="iconfont icon-wenbenjuzhong"></i>粉丝列表</el-menu-item>
         </el-menu-item-group>
         </el-submenu>
         <el-menu-item index="3">
