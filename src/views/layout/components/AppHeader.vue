@@ -9,7 +9,8 @@
             </span>
             <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item icon="iconfont icon-icon_boss">个人信息</el-dropdown-item>
-                <el-dropdown-item icon="iconfont icon-tuichu">退出</el-dropdown-item>
+                <!-- 使用 .native 事件修饰符将原始的html页面注册到组件的根元素  -->
+                <el-dropdown-item @click.native="handleLogout" icon="iconfont icon-tuichu">退出</el-dropdown-item>
             </el-dropdown-menu>
            </el-dropdown>
        </el-col>
@@ -27,6 +28,30 @@ export default {
   },
   created () {
     this.userInfo = JSON.parse(window.localStorage.getItem('user_info'))
+  },
+  methods: {
+    handleLogout () {
+      this.$confirm('此操作将退出登陆, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        // 清空本地存储中的 user_info
+        window.localStorage.removeItem('user_info')
+        // 跳转到登陆页面
+        this.$router.push({ name: 'login' })
+        this.$message({
+          type: 'success',
+          message: '退出成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消退出'
+        })
+      })
+    }
   }
 }
 </script>

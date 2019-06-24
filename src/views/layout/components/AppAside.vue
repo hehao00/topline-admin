@@ -9,7 +9,7 @@
       background-color="rgb(53,59,78)"
       text-color="#fff"
       active-text-color="#ffd04b"
-      :router='true'
+      :router="true"
       >
       <el-menu-item index="/">
         <i class="el-icon-menu"></i>
