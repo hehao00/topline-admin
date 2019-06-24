@@ -29,10 +29,11 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 // 引入极验
 import '@/vendor/gt'
 import { saveUser } from '@/utils/auth'
+import initGeetest from '@/utils/init-geetest'
 const initCodeTimeSeconds = 60
 export default {
   name: 'AppLogin',
@@ -73,12 +74,33 @@ export default {
         this.submitLogin()
       })
     },
-    submitLogin () {
-      axios({
-        method: 'POST',
-        url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
-        data: this.userform
-      }).then(res => {
+    // submitLogin () {
+    //   axios({
+    //     method: 'POST',
+    //     url: 'http://ttapi.research.itcast.cn/mp/v1_0/authorizations',
+    //     data: this.userform
+    //   }).then(res => {
+    //     const userInfo = res.data.data
+    //     // window.localStorage.setItem('user_info', JSON.stringify(userInfo))
+    //     saveUser(userInfo)
+    //     this.$message({
+    //       message: '登录成功',
+    //       type: 'success'
+    //     })
+    //     this.$router.push({
+    //       name: 'home'
+    //     })
+    //   }).catch((e) => {
+    //     this.$message.error('登录失败，手机号或验证码错误')
+    //   })
+    // },
+    async submitLogin () {
+      try {
+        const res = await this.$http({
+          method: 'POST',
+          url: '/authorizations',
+          data: this.form
+        })
         const userInfo = res.data.data
         // window.localStorage.setItem('user_info', JSON.stringify(userInfo))
         saveUser(userInfo)
@@ -89,9 +111,9 @@ export default {
         this.$router.push({
           name: 'home'
         })
-      }).catch((e) => {
+      } catch (err) {
         this.$message.error('登录失败，手机号或验证码错误')
-      })
+      }
     },
     handleSendCode () {
       // 验证手机号是否有效
@@ -103,46 +125,85 @@ export default {
         this.showGeetest()
       })
     },
-    showGeetest () {
+    // showGeetest () {
+    //   const { mobile } = this.userform
+    //   axios({
+    //     methods: 'GET',
+    //     url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${mobile}`
+    //   }).then(res => {
+    //     const { data } = res.data
+    //     window.initGeetest({
+    //       // 以下配置参数来自服务端 SDK
+    //       gt: data.gt,
+    //       challenge: data.challenge,
+    //       offline: !data.success,
+    //       new_captcha: data.new_captcha,
+    //       product: 'bind'
+    //     }, captchaObj => {
+    //       captchaObj.onReady(() => {
+    //         captchaObj.verify() // 弹出验证内容框
+    //         // your code
+    //       }).onSuccess(() => {
+    //         const {
+    //           geetest_challenge: challenge,
+    //           geetest_seccode: seccode,
+    //           geetest_validate: validate } = captchaObj.getValidate()
+    //         axios({
+    //           method: 'GET',
+    //           url: `http://ttapi.research.itcast.cn/mp/v1_0/sms/codes/${mobile}`,
+    //           params: {
+    //             challenge,
+    //             validate,
+    //             seccode
+    //           }
+    //         }).then(res => {
+    //           // console.log(res.data)
+    //           this.codeCountDown()
+    //         })
+    //       }).onError(function () {
+    //         // your code
+    //       })
+    //     }
+    //     )
+    //   })
+    // },
+    async showGeetest () {
       const { mobile } = this.userform
-      axios({
-        methods: 'GET',
-        url: `http://ttapi.research.itcast.cn/mp/v1_0/captchas/${mobile}`
-      }).then(res => {
-        const { data } = res.data
-        window.initGeetest({
-          // 以下配置参数来自服务端 SDK
-          gt: data.gt,
-          challenge: data.challenge,
-          offline: !data.success,
-          new_captcha: data.new_captcha,
-          product: 'bind'
-        }, captchaObj => {
-          captchaObj.onReady(() => {
-            captchaObj.verify() // 弹出验证内容框
-            // your code
-          }).onSuccess(() => {
-            const {
-              geetest_challenge: challenge,
-              geetest_seccode: seccode,
-              geetest_validate: validate } = captchaObj.getValidate()
-            axios({
-              method: 'GET',
-              url: `http://ttapi.research.itcast.cn/mp/v1_0/sms/codes/${mobile}`,
-              params: {
-                challenge,
-                validate,
-                seccode
-              }
-            }).then(res => {
-              // console.log(res.data)
-              this.codeCountDown()
-            })
-          }).onError(function () {
-            // your code
-          })
-        }
-        )
+      const res = await this.$http({
+        method: 'GET',
+        url: `captchas/${mobile}`
+      })
+      const { data } = res.data
+      const captchaObj = await initGeetest({
+        // 以下配置参数来自服务端 SDK
+        gt: data.gt,
+        challenge: data.challenge,
+        offline: !data.success,
+        new_captcha: data.new_captcha,
+        product: 'bind' // 隐藏，直接弹出式
+      })
+      captchaObj.onReady(() => {
+        // 验证码ready之后才能调用verify方法显示验证码
+        captchaObj.verify() // 弹出验证码内容框
+      }).onSuccess(async () => {
+        // your code
+        const {
+          geetest_challenge: challenge,
+          geetest_seccode: seccode,
+          geetest_validate: validate } =
+        captchaObj.getValidate()
+        // 发送短信
+        await this.$http({
+          method: 'GET',
+          url: `/sms/codes/${mobile}`,
+          params: {
+            challenge,
+            validate,
+            seccode
+          }
+        })
+        // 开始倒计时
+        this.codeCountDown()
       })
     },
     // 发送验证码倒计时
