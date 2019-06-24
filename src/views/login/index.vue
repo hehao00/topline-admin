@@ -32,7 +32,7 @@
 import axios from 'axios'
 // 引入极验
 import '@/vendor/gt'
-import { saveUser } from '@/utils/auth' // 按需加载 加载模块中非 export default 成员
+import { saveUser } from '@/utils/auth'
 const initCodeTimeSeconds = 60
 export default {
   name: 'AppLogin',
