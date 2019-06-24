@@ -8,7 +8,9 @@
       @close="handleClose"
       background-color="rgb(53,59,78)"
       text-color="#fff"
-      active-text-color="#ffd04b">
+      active-text-color="#ffd04b"
+      :router='true'
+      >
       <el-menu-item index="/">
         <i class="el-icon-menu"></i>
         <span slot="title">首页</span>
@@ -19,7 +21,7 @@
           <span>内容管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="1-1">发布文章</el-menu-item>
+          <el-menu-item index="/publish">发布文章</el-menu-item>
           <el-menu-item index="1-2">内容列表</el-menu-item>
           <el-menu-item index="1-3">评论列表</el-menu-item>
           <el-menu-item index="1-4">素材管理</el-menu-item>

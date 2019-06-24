@@ -58,7 +58,7 @@ export default {
         ]
       },
       codeTimer: null, // 倒计时定时器
-      codeTimerSeconds: initCodeTimeSeconds // 倒计时事件
+      codeTimerSeconds: initCodeTimeSeconds // 倒计时时间
     }
   },
 

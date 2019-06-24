@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import nprogress from 'nprogress'
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     // {
     //   name: 'home',
@@ -19,6 +19,11 @@ export default new Router({
           name: 'home',
           path: '',
           component: () => import('@/views/home')
+        },
+        {
+          name: 'publish',
+          path: '/publish',
+          component: () => import('@/views/publish')
         }
       ]
     },
@@ -29,3 +34,36 @@ export default new Router({
     }
   ]
 })
+// 全局前置守卫
+// 当你访问路由页面的时候，会先进入这里
+// to 要去哪里的相关数据
+// from 来自哪里的相关数据
+// next 允许通过的方法
+router.beforeEach((to, from, next) => {
+  nprogress.start()
+  const userInfo = window.localStorage.getItem('user_info')
+  if (to.path !== '/login') {
+    // 非登陆页面
+    // 没有登陆，跳转到登陆页
+    if (!userInfo) {
+      next({ name: 'login' })
+    } else {
+      // 登陆了 允许通过
+      next()
+    }
+  } else {
+    // 登陆页面
+    // 没有登陆 允许通过
+    if (!userInfo) {
+      next()
+    } else {
+      // 登陆了 不允许通过
+      next({ name: 'home' })
+      window.location.reload()
+    }
+  }
+})
+router.afterEach((to, from) => {
+  nprogress.done()
+})
+export default router
