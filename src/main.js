@@ -5,7 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import 'nprogress/nprogress.css'
 import axios from 'axios'
-import { getUser } from '@/utils/auth'
+import { getUser, removeUser } from '@/utils/auth'
 // 引入公共样式文件
 import './styles/index.less'
 // 配置axios的基础路径
@@ -26,14 +26,24 @@ axios.interceptors.request.use(config => {
 })
 
 // axios 响应拦截器
-axios.interceptors.response.use(response => {
+axios.interceptors.response.use(response => { // >= 200 && < 400 的状态码会进入这里
   // response 响应结果对象
   if (typeof response.data === 'object' && response.data.data) {
     return response.data.data
   } else {
     return response.data
   }
-}, error => {
+}, error => { // >= 400 的状态码会进入这里
+  // 如果用户 token 无效  跳转到登陆页面
+  // console.log('状态异常',error)
+  if (error.response.status === 401) {
+    // 清除本地存储中无效的token 的用户信息
+    removeUser()
+    // 跳转到用户登陆页面
+    router.push({
+      name: 'login'
+    })
+  }
   return Promise.reject(error)
 })
 

@@ -60,11 +60,11 @@ export default {
     //   const token = getUser().token
       // 除了登陆接口 其他接口都必须在请求头通过 Authorization 字段提供用户 token
       // 登陆成功 服务端会生成一个 token 令牌 放到用户信息中
-      const res = await this.$http({
+      const data = await this.$http({
         method: 'GET',
         url: '/articles'
       })
-      console.log(res.data)
+      console.log(data)
     }
   }
 }
