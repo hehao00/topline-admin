@@ -65,6 +65,7 @@ export default {
   },
 
   methods: {
+    // 登陆
     handleLogin () {
       this.$refs['form'].validate(valid => {
         if (!valid) {
@@ -115,6 +116,7 @@ export default {
     //     this.$message.error('登录失败，手机号或验证码错误')
     //   }
     // },
+    // 发送验证码
     handleSendCode () {
       // 验证手机号是否有效
       this.$refs['form'].validateField('mobile', errorMessage => {
@@ -125,6 +127,7 @@ export default {
         this.showGeetest()
       })
     },
+    // 发送请求 人机交互验证
     showGeetest () {
       const { mobile } = this.userform
       this.$http({
