@@ -5,11 +5,38 @@ import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import 'nprogress/nprogress.css'
 import axios from 'axios'
+import { getUser } from '@/utils/auth'
 // 引入公共样式文件
 import './styles/index.less'
 // 配置axios的基础路径
 // axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 axios.defaults.baseURL = 'http://toutiao.course.itcast.cn/mp/v1_0'
+
+// axios请求拦截器
+// return config 是允许请求发送的开关
+axios.interceptors.request.use(config => {
+  const user = getUser()
+  // 如果有 user 数据 则往本次请求中添加用户 token
+  if (user) {
+    config.headers.Authorization = `Bearer ${user.token}`
+  }
+  return config
+}, error => {
+  return Promise.reject(error)
+})
+
+// axios 响应拦截器
+axios.interceptors.response.use(response => {
+  // response 响应结果对象
+  if (typeof response.data === 'object' && response.data.data) {
+    return response.data.data
+  } else {
+    return response.data
+  }
+}, error => {
+  return Promise.reject(error)
+})
+
 Vue.use(ElementUI)
 // 把一些需要在组件中频繁使用的成员放到 Vue.prototype中
 // 几乎所有组件都要去发请求 在组件中发请求直接 this.$hhtp({method,url...})
