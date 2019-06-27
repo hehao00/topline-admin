@@ -26,8 +26,10 @@
           </el-form-item>
           <el-form-item label="时间选择">
             <el-date-picker
-              v-model="filterParams.begin_pubdate"
-              type="datetimerange"
+              value-format="yyyy-MM-dd"
+              @change="handleDateChange"
+              v-model="range_date"
+              type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期">
@@ -41,7 +43,7 @@
     <!-- 文章列表 -->
      <el-card class="box-card1">
     <div slot="header" class="clearfix">
-        <span>一共有<strong></strong>条数据</span>
+        <span>一共有<strong>{{ totalCount }}</strong>条数据</span>
     </div>
     <!--
       不需要手动 v-for 遍历
@@ -59,7 +61,7 @@
       style="width: 100%">
       <el-table-column
         label="封面"
-        width="180">
+        width="300">
         <!--
           template 中的内容就是自定义表格列内容
           如果需要在 template 中访问遍历项数据，则需要给 template 配置 slot-scope="scope"
@@ -78,11 +80,11 @@
       <el-table-column
         prop="title"
         label="标题"
-        width="180">
+        width="300">
       </el-table-column>
       <el-table-column
         label="状态"
-        width="180">
+        width="300">
          <template slot-scope="scope">
             <el-tag :type="statTypes[scope.row.status].type">{{ statTypes[scope.row.status].label }}</el-tag>
           </template>
@@ -90,7 +92,7 @@
        <el-table-column
           prop="pubdate"
           label="发布时间"
-          width="180">
+          width="300">
         </el-table-column>
       <el-table-column
         label="操作">
@@ -157,6 +159,7 @@ export default {
         begin_pubdate: '', // 开始时间
         end_pubdate: '' // 结束时间
       },
+      range_date: '', // 时间范围绑定值  为了绑定 date 组件触发 change 事件
       channels: [] // 所有频道
     }
   },
@@ -165,6 +168,12 @@ export default {
     this.loadChannels()
   },
   methods: {
+    // 时间
+    handleDateChange (value) {
+      this.filterParams.begin_pubdate = value[0]
+      this.filterParams.end_pubdate = value[1]
+    },
+    // 获取频道列表数据
     async loadChannels () {
       try {
         const data = await this.$http({
@@ -177,6 +186,7 @@ export default {
         this.$message.error('获取频道数据失败')
       }
     },
+    // 数据列表
     async loadArticles () {
       // 请求开始 加载loading
       this.articleLoading = true
