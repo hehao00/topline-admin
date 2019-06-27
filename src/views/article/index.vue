@@ -16,9 +16,12 @@
               </el-radio-group>
            </el-form-item>
            <el-form-item label="频道列表">
-            <el-select v-model="filterParams.channel_id" placeholder="请选择活动区域">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="filterParams.channel_id" clearable placeholder="请选择活动区域">
+              <el-option
+              v-for="item in channels"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"></el-option>
            </el-select>
           </el-form-item>
           <el-form-item label="时间选择">
@@ -38,7 +41,7 @@
     <!-- 文章列表 -->
      <el-card class="box-card1">
     <div slot="header" class="clearfix">
-        <span>一共有xxx条数据</span>
+        <span>一共有<strong></strong>条数据</span>
     </div>
     <!--
       不需要手动 v-for 遍历
@@ -153,13 +156,27 @@ export default {
         channel_id: '', // 频道id
         begin_pubdate: '', // 开始时间
         end_pubdate: '' // 结束时间
-      }
+      },
+      channels: [] // 所有频道
     }
   },
   created () {
     this.loadArticles()
+    this.loadChannels()
   },
   methods: {
+    async loadChannels () {
+      try {
+        const data = await this.$http({
+          method: 'GET',
+          url: '/channels'
+        })
+        this.channels = data.channels
+      } catch (err) {
+        console.log(err)
+        this.$message.error('获取频道数据失败')
+      }
+    },
     async loadArticles () {
       // 请求开始 加载loading
       this.articleLoading = true
