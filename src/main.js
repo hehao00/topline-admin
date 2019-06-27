@@ -9,8 +9,8 @@ import { getUser, removeUser } from '@/utils/auth'
 // 引入公共样式文件
 import './styles/index.less'
 // 配置axios的基础路径
-// axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
-axios.defaults.baseURL = 'http://toutiao.course.itcast.cn/mp/v1_0'
+axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
+// axios.defaults.baseURL = 'http://toutiao.course.itcast.cn/mp/v1_0'
 
 // axios请求拦截器
 // return config 是允许请求发送的开关

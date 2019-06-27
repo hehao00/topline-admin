@@ -41,8 +41,8 @@ export default {
   data () {
     return {
       userform: { // 表单数据对象
-        mobile: '',
-        code: '',
+        mobile: '13911111111',
+        code: '246810',
         agree: ''
       },
       rules: { // 验证规则对象

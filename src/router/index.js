@@ -54,6 +54,10 @@ router.beforeEach((to, from, next) => {
     // 非登陆页面
     // 没有登陆，跳转到登陆页
     if (!userInfo) {
+      // 手动结束动画 防止出现在登陆页面访问其他页面顶部一直 loading 的问题、
+      if (from.path === '/login') {
+        nprogress.done()
+      }
       next({ name: 'login' })
     } else {
       // 登陆了 允许通过
