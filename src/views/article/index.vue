@@ -5,30 +5,33 @@
     <div slot="header" class="clearfix">
         <span>数据筛选</span>
     </div>
-        <el-form ref="form" :model="form" label-width="80px">
+        <el-form ref="form" :model="filterParams" label-width="80px">
            <el-form-item label="文章状态">
-              <el-radio-group v-model="form.resource">
-                <el-radio label="线上品牌商赞助"></el-radio>
-                <el-radio label="线下场地免费"></el-radio>
+              <el-radio-group v-model="filterParams.status">
+                <el-radio label="全部"></el-radio>
+                <el-radio
+                v-for="(item,index) in statTypes"
+                :key="item.label"
+                :label="index">{{ item.label }}</el-radio>
               </el-radio-group>
            </el-form-item>
            <el-form-item label="频道列表">
-            <el-select v-model="form.region" placeholder="请选择活动区域">
+            <el-select v-model="filterParams.channel_id" placeholder="请选择活动区域">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
            </el-select>
           </el-form-item>
-  <el-form-item label="时间选择">
-    <el-col :span="11">
-      <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-    </el-col>
-    <el-col class="line" :span="2">-</el-col>
-    <el-col :span="11">
-      <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-    </el-col>
-  </el-form-item>
+          <el-form-item label="时间选择">
+            <el-date-picker
+              v-model="filterParams.begin_pubdate"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
+          </el-form-item>
   <el-form-item>
-    <el-button type="primary" @click="onSubmit">筛选</el-button>
+    <el-button type="primary">筛选</el-button>
   </el-form-item>
 </el-form>
     </el-card>
@@ -145,15 +148,11 @@ export default {
       pageSize: 10, // 每页大小
       totalCount: 0, // 总数据量
       page: 1, // 当前页面
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+      filterParams: {
+        status: '', // 文章状态
+        channel_id: '', // 频道id
+        begin_pubdate: '', // 开始时间
+        end_pubdate: '' // 结束时间
       }
     }
   },
