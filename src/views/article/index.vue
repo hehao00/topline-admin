@@ -99,9 +99,9 @@
         </el-table-column>
       <el-table-column
         label="操作">
-         <template>
+         <template slot-scope="scope">
             <el-button size="mini" type="primary" plain>修改</el-button>
-            <el-button size="mini" type="danger" plain>删除</el-button>
+            <el-button size="mini" type="danger" plain @click="handleDelete(scope.row)">删除</el-button>
           </template>
       </el-table-column>
     </el-table>
@@ -171,6 +171,34 @@ export default {
     this.loadChannels()
   },
   methods: {
+    // 删除文章
+    async handleDelete (item) {
+      try {
+        await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        await this.$http({
+          method: 'DELETE',
+          url: `/articles/${item.id}`
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+        // 删除成功重新加载数据列表
+        this.loadArticles()
+      } catch (err) {
+        if (err === 'cancel') {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        }
+        this.$message.erro('删除失败')
+      }
+    },
     // 查询
     handleFilter () {
       // 点击查询按钮 根据表单中的数据查询文章列表

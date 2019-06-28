@@ -5,12 +5,25 @@ import 'element-ui/lib/theme-chalk/index.css'
 import router from './router'
 import 'nprogress/nprogress.css'
 import axios from 'axios'
+import JSONbig from 'json-bigint'
 import { getUser, removeUser } from '@/utils/auth'
 // 引入公共样式文件
 import './styles/index.less'
 // 配置axios的基础路径
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 // axios.defaults.baseURL = 'http://toutiao.course.itcast.cn/mp/v1_0'
+
+// 解决后端返回数据中的数字超出安全范围问题
+axios.defaults.transformResponse = [function (data) {
+  // 使用 JSONbig.parse 转换原始数据
+  try {
+    // 如果是 json 格式字符串 转换并返回给后续使用
+    return JSONbig.parse(data)
+  } catch (err) {
+    // 报错就意味着 data 不是 json 格式字符串 直接原样返回给后续使用
+    return data
+  }
+}]
 
 // axios请求拦截器
 // return config 是允许请求发送的开关
