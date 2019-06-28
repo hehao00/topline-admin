@@ -36,7 +36,10 @@
             </el-date-picker>
           </el-form-item>
   <el-form-item>
-    <el-button type="primary">筛选</el-button>
+    <el-button type="primary"
+    @click="handleFilter"
+     :loading="articleLoading"
+    >筛选</el-button>
   </el-form-item>
 </el-form>
     </el-card>
@@ -61,7 +64,7 @@
       style="width: 100%">
       <el-table-column
         label="封面"
-        width="300">
+        width="330">
         <!--
           template 中的内容就是自定义表格列内容
           如果需要在 template 中访问遍历项数据，则需要给 template 配置 slot-scope="scope"
@@ -71,7 +74,7 @@
          -->
         <template slot-scope="scope">
           <img
-          width="20"
+          width="50"
           v-for="item in scope.row.cover.images"
           :key="item"
           :src="item">
@@ -80,11 +83,11 @@
       <el-table-column
         prop="title"
         label="标题"
-        width="300">
+        width="330">
       </el-table-column>
       <el-table-column
         label="状态"
-        width="300">
+        width="330">
          <template slot-scope="scope">
             <el-tag :type="statTypes[scope.row.status].type">{{ statTypes[scope.row.status].label }}</el-tag>
           </template>
@@ -92,7 +95,7 @@
        <el-table-column
           prop="pubdate"
           label="发布时间"
-          width="300">
+          width="330">
         </el-table-column>
       <el-table-column
         label="操作">
@@ -168,6 +171,12 @@ export default {
     this.loadChannels()
   },
   methods: {
+    // 查询
+    handleFilter () {
+      // 点击查询按钮 根据表单中的数据查询文章列表
+      this.page = 1 // 查询从第一页开始加载数据
+      this.loadArticles()
+    },
     // 时间
     handleDateChange (value) {
       this.filterParams.begin_pubdate = value[0]
@@ -193,12 +202,21 @@ export default {
       // const token = getUser().token
       // 除了登陆接口 其他接口都必须在请求头通过 Authorization 字段提供用户 token
       // 登陆成功 服务端会生成一个 token 令牌 放到用户信息中
+      // 去除无用数据字段
+      const filterData = {}
+      for (let key in this.filterParams) {
+        const item = this.filterParams[key]
+        if (item !== null && item !== undefined && item !== '') {
+          filterData[key] = item
+        }
+      }
       const data = await this.$http({
         method: 'GET',
         url: '/articles',
         params: {
           page: this.page, // 页面
-          per_page: this.pageSize // 每页大小
+          per_page: this.pageSize, // 每页大小
+          ...filterData
         }
       })
       // console.log(data)
