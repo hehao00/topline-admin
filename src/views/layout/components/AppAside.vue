@@ -23,7 +23,7 @@
         <el-menu-item-group>
           <el-menu-item index="/publish"><i class="iconfont icon-xinwen"></i>发布文章</el-menu-item>
           <el-menu-item index="/article"><i class="iconfont icon-neirongliebiao"></i>内容列表</el-menu-item>
-          <el-menu-item index="1-3"><i class="iconfont icon-wenbenshuru"></i>评论列表</el-menu-item>
+          <el-menu-item index="/comment"><i class="iconfont icon-wenbenshuru"></i>评论列表</el-menu-item>
           <el-menu-item index="1-4"><i class="iconfont icon-sucai"></i>素材管理</el-menu-item>
         </el-menu-item-group>
         </el-submenu>

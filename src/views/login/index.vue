@@ -97,12 +97,12 @@ export default {
     },
     // async submitLogin () {
     //   try {
-    //     const res = await this.$http({
+    //     const userInfo = await this.$http({
     //       method: 'POST',
     //       url: '/authorizations',
     //       data: this.form
     //     })
-    //     const userInfo = res.data.data
+    //     // const userInfo = res.data.data
     //     // window.localStorage.setItem('user_info', JSON.stringify(userInfo))
     //     saveUser(userInfo)
     //     this.$message({
@@ -171,44 +171,57 @@ export default {
       })
     },
     // async showGeetest () {
-    //   const { mobile } = this.userform
-    //   const res = await this.$http({
-    //     method: 'GET',
-    //     url: `captchas/${mobile}`
-    //   })
-    //   const { data } = res.data
-    //   const captchaObj = await initGeetest({
-    //     // 以下配置参数来自服务端 SDK
-    //     gt: data.gt,
-    //     challenge: data.challenge,
-    //     offline: !data.success,
-    //     new_captcha: data.new_captcha,
-    //     product: 'bind' // 隐藏，直接弹出式
-    //   })
-    //   captchaObj.onReady(() => {
-    //     // 验证码ready之后才能调用verify方法显示验证码
-    //     captchaObj.verify() // 弹出验证码内容框
-    //   }).onSuccess(async () => {
-    //     // your code
-    //     const {
-    //       geetest_challenge: challenge,
-    //       geetest_seccode: seccode,
-    //       geetest_validate: validate } =
-    //     captchaObj.getValidate()
-    //     // 发送短信
-    //     await this.$http({
+    //   try {
+    //     this.codeLoading = true
+    //     // 任何函数中的 function 函数内部的 this 指向 window
+    //     const { mobile } = this.form
+    //     const data = await this.$http({
     //       method: 'GET',
-    //       url: `/sms/codes/${mobile}`,
-    //       params: {
-    //         challenge,
-    //         validate,
-    //         seccode
+    //       url: `/captchas/${mobile}`
+    //     })
+    //     const captchaObj = await initGeetest({
+    //       // 以下配置参数来自服务端 SDK
+    //       gt: data.gt,
+    //       challenge: data.challenge,
+    //       offline: !data.success,
+    //       new_captcha: data.new_captcha,
+    //       product: 'bind' // 隐藏，直接弹出式
+    //     })
+    //     captchaObj.onReady(() => {
+    //       this.codeLoading = false
+    //       // 验证码ready之后才能调用verify方法显示验证码
+    //       captchaObj.verify() // 弹出验证码内容框
+    //     }).onSuccess(async () => {
+    //       try {
+    //         // your code
+    //         const {
+    //           geetest_challenge: challenge,
+    //           geetest_seccode: seccode,
+    //           geetest_validate: validate } =
+    //         captchaObj.getValidate()
+    //         // 发送短信
+    //         await this.$http({
+    //           method: 'GET',
+    //           url: `/sms/codes/${mobile}`,
+    //           params: {
+    //             challenge,
+    //             validate,
+    //             seccode
+    //           }
+    //         })
+    //         // 开始倒计时
+    //         this.codeCountDown()
+    //       } catch (err) {
+    //         this.$message.error('获取验证码失败')
+    //         this.codeLoading = false
     //       }
     //     })
-    //     // 开始倒计时
-    //     this.codeCountDown()
-    //   })
+    //   } catch (err) {
+    //     this.$message.error('获取验证码失败')
+    //     this.codeLoading = false
+    //   }
     // },
+
     // 发送验证码倒计时
     codeCountDown () {
       this.codeTimer = window.setInterval(() => {

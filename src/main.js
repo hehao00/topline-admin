@@ -29,10 +29,14 @@ axios.defaults.transformResponse = [function (data) {
 // return config 是允许请求发送的开关
 axios.interceptors.request.use(config => {
   const user = getUser()
-  // 如果有 user 数据 则往本次请求中添加用户 token
+
+  // 如果有 user 数据，则往本次请求中添加用户 token
   if (user) {
     config.headers.Authorization = `Bearer ${user.token}`
   }
+
+  // return config 是允许请求发送的开关
+  // 我们可以在这之前进行一些业务逻辑操作
   return config
 }, error => {
   return Promise.reject(error)
@@ -40,26 +44,29 @@ axios.interceptors.request.use(config => {
 
 // axios 响应拦截器
 axios.interceptors.response.use(response => { // >= 200 && < 400 的状态码会进入这里
-  // response 响应结果对象
+  // response 就是响应结果对象
+  // 这里将 response 原样返回，那么你发请求的地方收到的就是 response
+  // 我们可以控制请求收到的响应数据格式
   if (typeof response.data === 'object' && response.data.data) {
     return response.data.data
   } else {
     return response.data
   }
 }, error => { // >= 400 的状态码会进入这里
-  // 如果用户 token 无效  跳转到登陆页面
-  // console.log('状态异常',error)
+  // 如果用户 token 无效，让其跳转到登录页面
   if (error.response.status === 401) {
-    // 清除本地存储中无效的token 的用户信息
+    // 清除本地存储中的无效 token 的用户信息
     removeUser()
-    // 跳转到用户登陆页面
+
+    // 跳转到用户登录页面
     router.push({
       name: 'login'
     })
   }
+  // 返回一个理解 reject 失败的 Promise
+  // 这里抛出异常是为了能让你后续 Promise 调用能正确的收到这里的异常
   return Promise.reject(error)
 })
-
 Vue.use(ElementUI)
 // 把一些需要在组件中频繁使用的成员放到 Vue.prototype中
 // 几乎所有组件都要去发请求 在组件中发请求直接 this.$hhtp({method,url...})
