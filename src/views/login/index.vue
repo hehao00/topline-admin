@@ -80,10 +80,11 @@ export default {
         method: 'POST',
         url: '/authorizations',
         data: this.userform
-      }).then(res => {
-        const userInfo = res.data.data
+      }).then(data => {
+        // const userInfo = res.data.data
         // window.localStorage.setItem('user_info', JSON.stringify(userInfo))
-        saveUser(userInfo)
+        // saveUser(userInfo)
+        saveUser(data)
         this.$message({
           message: '登录成功',
           type: 'success'
@@ -133,8 +134,8 @@ export default {
       this.$http({
         methods: 'GET',
         url: `/captchas/${mobile}`
-      }).then(res => {
-        const { data } = res.data
+      }).then(data => {
+        // const { data } = res.data
         window.initGeetest({
           // 以下配置参数来自服务端 SDK
           gt: data.gt,
@@ -159,7 +160,7 @@ export default {
                 validate,
                 seccode
               }
-            }).then(res => {
+            }).then(data => {
               // console.log(res.data)
               this.codeCountDown()
             })

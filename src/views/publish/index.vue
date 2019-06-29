@@ -4,14 +4,18 @@
       <span>发布文章</span>
     </div>
     <el-row>
-      <el-col :span="10">
+      <el-col :span="20">
         <!-- 表单 -->
         <el-form ref="form" :model="articleForm" label-width="80px">
           <el-form-item label="标题">
             <el-input v-model="articleForm.title" placeholder="文章名称"></el-input>
           </el-form-item>
           <el-form-item label="内容">
-            <el-input type="textarea" v-model="articleForm.content"></el-input>
+            <!-- <el-input type="textarea" v-model="articleForm.content"></el-input> -->
+             <quill-editor v-model="articleForm.content"
+                ref="myQuillEditor"
+                :options="editorOption">
+            </quill-editor>
           </el-form-item>
           <el-form-item label="封面">
           </el-form-item>
@@ -35,22 +39,29 @@
 
 <script>
 import ArticleChannel from '@/components/article-channel'
+// 富文本编辑器样式文件
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 export default {
   name: 'AppPublish',
   components: {
-    ArticleChannel
+    ArticleChannel,
+    quillEditor
   },
   data () {
     return {
       articleForm: {
         title: '', // 标题
         content: '', // 内容
-        channel_id: 3, // 频道
+        channel_id: '', // 频道
         cover: { // 封面
           type: 0, // 封面类型 -1:自动，0-无图，1-1张，3-3张
           images: []
         }
-      }
+      },
+      editorOption: {} // 富文本编辑器配置选项
     }
   },
   methods: {
@@ -75,6 +86,11 @@ export default {
   }
 }
 </script>
+<style>
+.ql-container{
+    height:350px;
+}
+</style>
 
 <style lang="less" scoped>
  .button2{
