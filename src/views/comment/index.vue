@@ -19,32 +19,22 @@
         </template>
       </el-table-column>
     </el-table>
-     <el-pagination
-    class="page"
-    background
-    layout="prev, pager, next"
-    :page-size="pageSize"
-    :total="totalCount"
-    @current-change="handleCurrentChange">
-   </el-pagination>
 </el-card>
 </template>
 <script>
 export default {
-  name: '',
+  name: 'ArticleComment',
 
   data () {
     return {
-      articles: [],
-      pageSize: 10, // 每页大小
-      totalCount: 0, // 总数据量
-      page: 1 // 当前页面
+      articles: []
     }
   },
   created () {
     this.loadArticles()
   },
   methods: {
+    // 获取评论列表
     async loadArticles () {
       try {
         const data = await this.$http({
@@ -54,11 +44,45 @@ export default {
             response_type: 'comment'
           }
         })
+        // 手动造一个数据 disabled 用来控制每一行的switch 开关的启用状态
+        data.results.forEach(item => {
+          item.disabled = false
+        })
         this.articles = data.results
       } catch (err) {
         console.log(err)
         this.$message.error('获取失败')
       }
+    },
+    // 控制评论状态
+    async handleChangeStatus (item) {
+      try {
+        // 禁用当前行的 switch 开关
+        item.disabled = true
+        // 请求修改
+        await this.$http({
+          method: 'PUT',
+          url: '/comments/status',
+          params: {
+            article_id: item.id.toString()
+          },
+          data: {
+            allow_comment: item.comment_status
+          }
+
+        })
+        this.$message({
+          type: 'success',
+          message: `${item.comment_status ? '启用' : '禁用'}评论状态成功`
+        })
+      } catch (err) {
+        console.log(err)
+        this.$message.error('修改评论状态失败')
+        // 评论状态修改失败 让客户端评论状态回到原来的状态
+        item.comment_status = !item.comment_status
+      }
+      // 启用当前行的 switch 开关
+      item.disabled = false
     }
   }
 }
