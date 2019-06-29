@@ -30,12 +30,13 @@
           <p>头像设置</p>
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false">
+            action=http://ttapi.research.itcast.cn/mp/v1_0/user/profile
+            :show-file-list="false"
+            :http-request="handleUpload">
             <img v-if="user.photo" :src="user.photo" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
          </el-upload>
-
+        <p>点击上传头像</p>
       </el-col>
   </el-row>
 </el-card>
@@ -90,6 +91,30 @@ export default {
       } catch (err) {
         console.log(err)
         this.$message.error('保存更新失败')
+      }
+    },
+    // 修改头像
+    async handleUpload (uploadConfig) {
+      try {
+        // axios 上传文件
+        // 1. 构建一个 FormData 对象
+        // 将文件添加到 FormData 对象中
+        const formData = new FormData()
+        formData.append('photo', uploadConfig.file)
+        // 2. 发送请求 将FormData 对象作为 axios 的data 请求体
+        const data = await this.$http({
+          method: 'PATCH',
+          url: '/user/photo',
+          data: formData
+        })
+        this.user.photo = data.photo
+        this.$message({
+          type: 'success',
+          message: '修改媒体头像成功'
+        })
+      } catch (err) {
+        console.log(err)
+        this.$message.error('修改头像失败')
       }
     }
   }
