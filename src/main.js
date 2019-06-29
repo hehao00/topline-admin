@@ -6,6 +6,7 @@ import router from './router'
 import 'nprogress/nprogress.css'
 import axios from 'axios'
 import JSONbig from 'json-bigint'
+import store from './store'
 import { getUser, removeUser } from '@/utils/auth'
 // 引入公共样式文件
 import './styles/index.less'
@@ -76,5 +77,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  store, // 将 store 配置到 vue 根实例中 所有的组件都可以通过 this.$store 来访问容器中的数据
   render: h => h(App)
 }).$mount('#app')
