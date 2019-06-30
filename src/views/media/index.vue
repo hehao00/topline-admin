@@ -1,5 +1,5 @@
 <template>
- <el-card class="box-card">
+ <el-card >
   <div slot="header">
     <span>素材管理</span>
   </div>
@@ -24,8 +24,8 @@
     </el-upload>
     </div>
     <el-row>
-  <el-col :span="4" v-for="item in images" :key="item.id" >
-    <el-card :body-style="{ padding: '0px' }">
+  <el-col :span="4" v-for="item in images" :key="item.id">
+    <el-card :body-style="{ padding: '0px' }" class="box-card">
        <img :src="item.url" class="image" style="max-width: 100%;">
       <div style="padding: 14px;">
         <div class="bottom clearfix">
@@ -162,9 +162,9 @@ export default {
   display: flex;
   justify-content: center;
 }
-.el-col-4 {
-    width: 200px;
-    height: 200px;
-    margin-left: 20px;
-}
+ .el-col-4 {
+   margin-left: 20px;
+   width:200px;
+   height:200px;
+ }
 </style>
