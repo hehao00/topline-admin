@@ -56,6 +56,11 @@ const router = new Router({
           name: 'fans',
           path: '/fans',
           component: () => import('@/views/fans')
+        },
+        {
+          name: 'overview',
+          path: '/overview',
+          component: () => import('@/views/overview')
         }
       ]
     },

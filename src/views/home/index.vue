@@ -1,6 +1,11 @@
 <template>
   <div>
-    <p>home</p>
+   <el-card class="box-card">
+  <div slot="header" class="clearfix">
+    <span>河马头条官方账号</span>
+  </div>
+</el-card>
+
   </div>
 </template>
 
