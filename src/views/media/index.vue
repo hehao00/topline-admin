@@ -5,10 +5,23 @@
   </div>
    <div class="action">
       <el-radio-group v-model="active">
-        <el-radio-button label="全部"></el-radio-button>
-        <el-radio-button label="收藏"></el-radio-button>
+        <el-radio-button label="全部" @click.native="loadImages(false)"></el-radio-button>
+        <el-radio-button label="收藏" @click.native="loadImages(true)"></el-radio-button>
       </el-radio-group>
-      <el-button type="primary">上传图片</el-button>
+      <!--
+        name 字段名称
+        headers 请求头
+        action 请求地址
+       -->
+        <el-upload
+        action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+        :headers="{ Authorization: `Bearer ${$store.state.user.token}` }"
+        name="image"
+        :on-success="() => { this.loadImages(false) }"
+        :show-file-list="false">
+      <el-button size="small" type="primary">点击上传</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+    </el-upload>
     </div>
     <el-row>
   <el-col :span="4" v-for="item in images" :key="item.id" >
@@ -136,7 +149,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .action {
   display: flex;
   justify-content: space-between;
@@ -148,5 +161,10 @@ export default {
 .bottom {
   display: flex;
   justify-content: center;
+}
+.el-col-4 {
+    width: 200px;
+    height: 200px;
+    margin-left: 20px;
 }
 </style>
