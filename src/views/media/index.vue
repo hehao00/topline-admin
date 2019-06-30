@@ -22,13 +22,18 @@
              :icon="item.is_collected ? 'el-icon-star-on' : 'el-icon-star-off'"
              circle
              @click="handleCollect(item)"></el-button>
-            <el-button plain type="primary" icon="el-icon-delete" circle></el-button>
+            <el-button
+            plain
+            type="primary"
+            icon="el-icon-delete"
+            circle
+            @click="handleDelete(item)"></el-button>
         </div>
       </div>
     </el-card>
   </el-col>
 </el-row>
-     <el-pagination
+    <el-pagination
       class="page"
       background
       layout="prev, pager, next"
@@ -48,7 +53,7 @@ export default {
       active: '全部',
       images: [],
       page: 1, // 当前页面
-      per_page: 10, // 每页大小
+      pageSize: 10, // 每页大小
       totalCount: 0 // 总数据
     }
   },
@@ -98,6 +103,34 @@ export default {
     // 分页数据
     async handleCurrentChange () {
 
+    },
+    // 删除图片
+    async handleDelete (item) {
+      try {
+        await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        await this.$http({
+          method: 'DELETE',
+          url: `/user/images/${item.id}`
+        })
+        this.$message({
+          type: 'success',
+          message: '删除图片成功!'
+        })
+        // 删除成功重新加载数据列表
+        this.loadImages()
+      } catch (err) {
+        if (err === 'cancel') {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        }
+        this.$message.erro('删除图片失败')
+      }
     }
   }
 }

@@ -8,7 +8,7 @@
          <AppHeader/>
      </el-header>
      <el-main>
-         <router-view/>
+         <router-view :key="$router.path"/>
      </el-main>
    </el-container>
   </el-container>
