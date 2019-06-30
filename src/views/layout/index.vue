@@ -8,7 +8,11 @@
          <AppHeader/>
      </el-header>
      <el-main>
-         <router-view :key="$router.path"/>
+       <!--
+         禁用路由缓存 只需要给 router-view 添加一个唯一的 key 即可
+         key 确保唯一
+        -->
+         <router-view :key="$route.path"/>
      </el-main>
    </el-container>
   </el-container>
