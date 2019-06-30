@@ -45,12 +45,6 @@ export default {
     this.loadArticles()
   },
   methods: {
-    // 查询
-    handleFilter () {
-      // 点击查询按钮 根据表单中的数据查询文章列表
-      this.page = 1 // 查询从第一页开始加载数据
-      this.loadArticles()
-    },
     // 获取评论列表
     async loadArticles () {
       try {

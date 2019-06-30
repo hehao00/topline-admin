@@ -46,13 +46,17 @@ export default {
   data () {
     return {
       active: '全部',
-      images: []
+      images: [],
+      page: 1, // 当前页面
+      per_page: 10, // 每页大小
+      totalCount: 0 // 总数据
     }
   },
   created () {
     this.loadImages()
   },
   methods: {
+    // 加载图片列表
     async loadImages (collect = false) {
       try {
         const data = await this.$http({
@@ -60,15 +64,40 @@ export default {
           url: '/user/images',
           params: {
             collect, // 是否查询收藏图片，默认查所有
-            page: 1,
-            per_page: 10
+            page: this.page, // 页面
+            per_page: this.pageSize // 每页大小
           }
         })
         this.images = data.results
+        this.totalCount = data.total_count
       } catch (err) {
         console.log(err)
         this.$message.error('加载图片列表失败')
       }
+    },
+    // 收藏图片
+    async handleCollect (item) {
+      const collect = !item.is_collected
+      try {
+        const data = await this.$http({
+          method: 'PUT',
+          url: `/user/images/${item.id}`,
+          data: {
+            collect
+          }
+        })
+        item.is_collected = data.collect
+        this.$message({
+          type: 'success',
+          message: `${collect ? '' : '取消'}收藏成功`
+        })
+      } catch (err) {
+        this.$message.error('收藏图片失败')
+      }
+    },
+    // 分页数据
+    async handleCurrentChange () {
+
     }
   }
 }
